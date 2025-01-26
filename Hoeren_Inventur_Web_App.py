@@ -24,7 +24,7 @@ CUSTOM_CSS = """
         padding: 5px !important;
         height: 35px !important;
         min-width: 70px; /* Mindestbreite für Buttons */
-        margin: 1px; /* Minimaler Abstand zwischen Buttons */
+        margin: 2px; /* Minimaler Abstand zwischen Buttons */
     }
 
     /* Textfeld an unteres Viertel anpassen */
@@ -33,22 +33,19 @@ CUSTOM_CSS = """
         height: 100px !important;
     }
 
-    /* Override columns stacking auf mobilen Geräten für drei Spalten */
-    @media (max-width: 768px) {
-        /* Zwinge Streamlit-Spalten, drei Spalten nebeneinander zu bleiben */
-        div[data-testid^="column"] > div {
-            flex: 0 0 30% !important; /* Drei Spalten à 30% */
-            max-width: 30% !important;
-            margin: 1.66% !important; /* Minimaler Abstand zwischen den Spalten */
-        }
+    /* Grid Layout für Buttons */
+    .button-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 5px;
+        justify-items: center;
+        padding: 10px;
     }
 
-    /* Zusätzliche Anpassungen für sehr kleine Bildschirme */
-    @media (max-width: 480px) {
-        div[data-testid^="column"] > div {
-            flex: 0 0 48% !important; /* Zwei Spalten à 48% */
-            max-width: 48% !important;
-            margin: 1% !important; /* Minimaler Abstand zwischen den Spalten */
+    @media (max-width: 768px) {
+        .button-container {
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 3px;
         }
     }
 </style>
@@ -76,27 +73,21 @@ if "last_click_time" not in st.session_state:
 if "logs" not in st.session_state:
     st.session_state["logs"] = []
 
-# Anzahl der Spalten pro Reihe (3 für Desktop und Landscape, 2 für Portrait)
-buttons_per_row = 3
+# Define a container div with class "button-container"
+st.markdown('<div class="button-container">', unsafe_allow_html=True)
 
-# Funktion zur Aufteilung der Buttons in Gruppen
-def chunked(iterable, n):
-    """Teilt eine Liste in Gruppen der Größe n."""
-    for i in range(0, len(iterable), n):
-        yield iterable[i:i + n]
+# Platzieren der Buttons innerhalb des Grid-Containers
+for label in button_definitions:
+    # Jeder Button erhält einen eindeutigen Schlüssel
+    if st.button(label, key=label):
+        current_time = time.time()
+        if current_time - st.session_state["last_click_time"] < 1:
+            st.warning("Bitte warte 1 Sekunde zwischen den Klicks!")
+        else:
+            st.session_state["last_click_time"] = current_time
+            st.session_state["logs"].append(label)
 
-# Erstelle die Button-Reihen
-for row in chunked(button_definitions, buttons_per_row):
-    cols = st.columns(buttons_per_row)
-    for col, label in zip(cols, row):
-        with col:
-            if st.button(label):
-                current_time = time.time()
-                if current_time - st.session_state["last_click_time"] < 1:
-                    st.warning("Bitte warte 1 Sekunde zwischen den Klicks!")
-                else:
-                    st.session_state["last_click_time"] = current_time
-                    st.session_state["logs"].append(label)
+st.markdown('</div>', unsafe_allow_html=True)
 
 # Unteres Viertel: Textfeld für die Logs
 st.text_area("Ausgabe", value=" ".join(st.session_state["logs"]), height=100)
