@@ -7,7 +7,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# CSS für mobile Geräte – Override columns stacking für drei Spalten
+# CSS zur Anpassung des Layouts auf mobilen Geräten
 CUSTOM_CSS = """
 <style>
     /* Überschrift verkleinern */
@@ -24,7 +24,7 @@ CUSTOM_CSS = """
         padding: 8px !important;
         height: 40px !important;
         min-width: 80px; /* Mindestbreite für Buttons */
-        margin: 5px; /* Abstand zwischen Buttons */
+        margin: 2px; /* Geringer Abstand zwischen Buttons */
     }
 
     /* Textfeld an unteres Viertel anpassen */
@@ -33,13 +33,13 @@ CUSTOM_CSS = """
         height: 100px !important;
     }
 
-    /* Override columns stacking auf mobilen Geräten für drei Spalten */
+    /* Override columns stacking auf mobilen Geräten für zwei Spalten */
     @media (max-width: 768px) {
-        /* Zwinge Streamlit-Spalten, drei Spalten nebeneinander zu bleiben */
+        /* Zwinge Streamlit-Spalten, zwei Spalten nebeneinander zu bleiben */
         div[data-testid="columns"] > div {
-            flex: 0 0 20% !important; /* Drei Spalten à 20% */
-            max-width: 20% !important;
-            margin: .666% !important; /* Abstand zwischen den Spalten */
+            flex: 0 0 48% !important; /* Zwei Spalten à 48% */
+            max-width: 48% !important;
+            margin: 1% !important; /* Minimaler Abstand zwischen den Spalten */
         }
     }
 </style>
@@ -67,8 +67,8 @@ if "last_click_time" not in st.session_state:
 if "logs" not in st.session_state:
     st.session_state["logs"] = []
 
-# Anzahl der Spalten pro Reihe (3 für mobile Optimierung)
-buttons_per_row = 3
+# Anzahl der Spalten pro Reihe (2 für mobile Optimierung)
+buttons_per_row = 2
 
 # Funktion zur Aufteilung der Buttons in Gruppen
 def chunked(iterable, n):
