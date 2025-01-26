@@ -27,29 +27,28 @@ CUSTOM_CSS = """
         margin: 2px; /* Minimaler Abstand zwischen Buttons */
     }
 
+    /* Make stButton divs inline-block */
+    .stButton {
+        display: inline-block;
+    }
+
     /* Textfeld an unteres Viertel anpassen */
     .stTextArea textarea {
         font-size: 14px !important;
         height: 100px !important;
     }
 
-    /* Flexbox Layout für Buttons */
-    .button-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px; /* Abstand zwischen den Buttons */
-        justify-content: center; /* Zentriert die Buttons horizontal */
-        padding: 10px;
-    }
-
     @media (max-width: 768px) {
-        .button-container {
-            gap: 3px; /* Weniger Abstand auf kleineren Bildschirmen */
+        .stButton>button {
+            margin: 1px;
+            padding: 4px;
+            font-size: 12px;
         }
     }
 </style>
 """
 
+# Anwenden des CSS
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # Oberes Viertel: Bild + Titel
@@ -72,12 +71,8 @@ if "last_click_time" not in st.session_state:
 if "logs" not in st.session_state:
     st.session_state["logs"] = []
 
-# Container für die Buttons mit Flexbox
-st.markdown('<div class="button-container">', unsafe_allow_html=True)
-
-# Platzieren der Buttons innerhalb des Flex-Containers
+# Platzieren der Buttons inline
 for label in button_definitions:
-    # Jeder Button erhält einen eindeutigen Schlüssel
     if st.button(label, key=label):
         current_time = time.time()
         if current_time - st.session_state["last_click_time"] < 1:
@@ -85,8 +80,6 @@ for label in button_definitions:
         else:
             st.session_state["last_click_time"] = current_time
             st.session_state["logs"].append(label)
-
-st.markdown('</div>', unsafe_allow_html=True)
 
 # Unteres Viertel: Textfeld für die Logs
 st.text_area("Ausgabe", value=" ".join(st.session_state["logs"]), height=100)
