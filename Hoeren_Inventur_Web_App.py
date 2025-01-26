@@ -8,14 +8,9 @@ st.set_page_config(
     layout="centered"
 )
 
-# Minimales CSS für mobile Geräte – Entfernt störende Stile
+# Minimale CSS-Anpassungen
 CUSTOM_CSS = """
 <style>
-    /* Anpassung der gesamten App-Padding für Mobilgeräte */
-    .stApp {
-        padding: 5px !important;
-    }
-
     /* Überschrift verkleinern */
     h1 {
         font-size: 20px !important;
@@ -30,7 +25,6 @@ CUSTOM_CSS = """
         padding: 8px !important;
         height: 40px !important;
         min-width: 80px; /* Mindestbreite für Buttons */
-        /* Entferne feste Breitenangaben */
     }
 
     /* Textfeld an unteres Viertel anpassen */
