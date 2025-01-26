@@ -13,11 +13,11 @@ CUSTOM_CSS = """
     @media only screen and (max-width: 768px) {
         .stButton>button {
             width: 100% !important;
-            font-size: 14px !important;
+            font-size: 11px !important;
             padding: 10px !important;
         }
         .stTextArea textarea {
-            font-size: 14px !important;
+            font-size: 11px !important;
         }
         .stApp {
             padding: 10px !important;
@@ -62,7 +62,7 @@ button_definitions = [
 
 # Dynamische Anpassung der Spaltenanzahl für mobile Geräte
 if st.session_state.get("is_mobile", False):
-    N_COLS = 1  # Auf Mobilgeräten nur eine Spalte
+    N_COLS = 3  # Auf Mobilgeräten nur eine Spalte
 else:
     N_COLS = 3  # Auf größeren Bildschirmen 3 Spalten
 
@@ -81,8 +81,3 @@ for i, label in enumerate(button_definitions):
 
 # Textbereich (unten)
 st.text_area("Ausgabe", value=" ".join(st.session_state["logs"]), height=100)
-
-# Erkennung von mobiler Ansicht durch Bildschirmgröße
-if st.sidebar.button("Gerät testen"):
-    width = st.sidebar.slider("Bildschirmbreite", min_value=300, max_value=1500, value=768)
-    st.session_state["is_mobile"] = width < 768
