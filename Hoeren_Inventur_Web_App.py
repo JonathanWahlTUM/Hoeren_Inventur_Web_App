@@ -1,14 +1,13 @@
 import streamlit as st
 import time
-from math import ceil
 
 # Seitenkonfiguration für optimales Layout auf Mobilgeräten
 st.set_page_config(
     page_title="Hören Inventur Web App",
-    layout="centered"
+    layout="centered"  # 'wide' kann ebenfalls ausprobiert werden
 )
 
-# Minimale CSS-Anpassungen
+# CSS zur Anpassung des Layouts auf mobilen Geräten
 CUSTOM_CSS = """
 <style>
     /* Überschrift verkleinern */
@@ -19,12 +18,13 @@ CUSTOM_CSS = """
         margin-bottom: 20px;
     }
 
-    /* Buttons styling */
+    /* Buttons Styling */
     .stButton>button {
         font-size: 14px !important;
         padding: 8px !important;
         height: 40px !important;
         min-width: 80px; /* Mindestbreite für Buttons */
+        margin: 5px; /* Abstand zwischen Buttons */
     }
 
     /* Textfeld an unteres Viertel anpassen */
@@ -32,15 +32,20 @@ CUSTOM_CSS = """
         font-size: 14px !important;
         height: 100px !important;
     }
+
+    /* Override columns stacking auf mobilen Geräten */
+    @media (max-width: 768px) {
+        /* Ziel: Zwinge Streamlit-Spalten, nebeneinander zu bleiben */
+        div[data-testid="columns"] > div {
+            flex: 0 0 45% !important; /* Zwei Spalten à 45% Breite */
+            max-width: 45% !important;
+            margin: 2.5% !important; /* Abstand zwischen den Spalten */
+        }
+    }
 </style>
 """
-st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
-# Funktion zur Aufteilung der Buttons in Gruppen
-def chunked(iterable, n):
-    """Teilt eine Liste in Gruppen der Größe n."""
-    for i in range(0, len(iterable), n):
-        yield iterable[i:i + n]
+st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # Oberes Viertel: Bild + Titel
 st.image("piktogramm.png", use_container_width=True)
@@ -64,6 +69,12 @@ if "logs" not in st.session_state:
 
 # Anzahl der Spalten pro Reihe (2 für mobile Optimierung)
 buttons_per_row = 2  # Ändere auf 3, falls gewünscht
+
+# Funktion zur Aufteilung der Buttons in Gruppen
+def chunked(iterable, n):
+    """Teilt eine Liste in Gruppen der Größe n."""
+    for i in range(0, len(iterable), n):
+        yield iterable[i:i + n]
 
 # Erstelle die Button-Reihen
 for row in chunked(button_definitions, buttons_per_row):
