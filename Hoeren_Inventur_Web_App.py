@@ -37,9 +37,9 @@ CUSTOM_CSS = """
     @media (max-width: 768px) {
         /* Zwinge Streamlit-Spalten, drei Spalten nebeneinander zu bleiben */
         div[data-testid="columns"] > div {
-            flex: 0 0 30% !important; /* Drei Spalten à 30% */
-            max-width: 30% !important;
-            margin: 1.666% !important; /* Abstand zwischen den Spalten */
+            flex: 0 0 20% !important; /* Drei Spalten à 20% */
+            max-width: 20% !important;
+            margin: .666% !important; /* Abstand zwischen den Spalten */
         }
     }
 </style>
