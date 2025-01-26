@@ -4,56 +4,8 @@ import time
 # Seitenkonfiguration für optimales Layout auf Mobilgeräten
 st.set_page_config(
     page_title="Hören Inventur Web App",
-    layout="centered"  # Alternativ 'wide' ausprobieren
+    layout="centered"
 )
-
-# CSS zur Anpassung des Layouts auf mobilen Geräten
-CUSTOM_CSS = """
-<style>
-    /* Überschrift verkleinern */
-    h1 {
-        font-size: 20px !important;
-        text-align: center !important;
-        margin-top: 10px;
-        margin-bottom: 20px;
-    }
-
-    /* Buttons Styling */
-    .stButton>button {
-        font-size: 14px !important;
-        padding: 5px !important;
-        height: 35px !important;
-        min-width: 70px; /* Mindestbreite für Buttons */
-        margin: 2px; /* Minimaler Abstand zwischen Buttons */
-    }
-
-    /* Make stButton divs inline-block */
-    .stButton {
-        display: inline-block;
-    }
-
-    /* Textfeld an unteres Viertel anpassen */
-    .stTextArea textarea {
-        font-size: 14px !important;
-        height: 100px !important;
-    }
-
-    @media (max-width: 768px) {
-        .stButton>button {
-            margin: 1px;
-            padding: 4px;
-            font-size: 12px;
-        }
-    }
-</style>
-"""
-
-# Anwenden des CSS
-st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
-
-# Oberes Viertel: Bild + Titel
-st.image("piktogramm.png", use_container_width=True)
-st.markdown("<h1>51 Minuten, 10.01.2024, 12.17 Uhr - München - Hören</h1>", unsafe_allow_html=True)
 
 # Liste der Button-Beschriftungen
 button_definitions = [
@@ -71,15 +23,84 @@ if "last_click_time" not in st.session_state:
 if "logs" not in st.session_state:
     st.session_state["logs"] = []
 
-# Platzieren der Buttons inline
-for label in button_definitions:
-    if st.button(label, key=label):
-        current_time = time.time()
-        if current_time - st.session_state["last_click_time"] < 1:
-            st.warning("Bitte warte 1 Sekunde zwischen den Klicks!")
-        else:
-            st.session_state["last_click_time"] = current_time
-            st.session_state["logs"].append(label)
+# Minimaler CSS zur Anpassung des Layouts
+custom_css = """
+<style>
+    /* Überschrift verkleinern */
+    h1 {
+        font-size: 20px !important;
+        text-align: center !important;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    /* Buttons Styling */
+    .button-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        justify-content: center;
+        padding: 10px 0;
+    }
+
+    .button-container button {
+        font-size: 14px;
+        padding: 5px 10px;
+        height: 35px;
+        min-width: 70px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .button-container button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Verberge das "Letzter Klick" Textfeld */
+    #streamlit-data {
+        display: none;
+    }
+</style>
+"""
+
+# HTML-Buttons als Fließtext-Elemente
+button_html = " ".join([
+    f'<button onclick="send_value(\'{label}\')">{label}</button>' for label in button_definitions
+])
+
+# JavaScript für Button-Handling
+js_code = """
+<script>
+    function send_value(value) {
+        var streamlit_data = window.parent.document.getElementById("streamlit-data");
+        if(streamlit_data){
+            streamlit_data.value = value;
+            streamlit_data.dispatchEvent(new Event('input'));
+        }
+    }
+</script>
+<input type="hidden" id="streamlit-data" />
+"""
+
+# Anwenden des CSS, der Buttons und des JavaScript-Codes
+st.markdown(custom_css + f'<div class="button-container">{button_html}</div>' + js_code, unsafe_allow_html=True)
+
+# Streamlit Event-Handler, um das geklickte Element zu speichern
+# Hinweis: "Letzter Klick" ist nun ohne sichtbares Label
+clicked_button = st.text_input("", key="streamlit-data", value="", placeholder="", label_visibility="hidden")
+
+# Wenn ein Button geklickt wird, speichere ihn im Session State
+if clicked_button:
+    current_time = time.time()
+    if current_time - st.session_state["last_click_time"] < 1:
+        st.warning("Bitte warte 1 Sekunde zwischen den Klicks!")
+    else:
+        st.session_state["last_click_time"] = current_time
+        st.session_state["logs"].append(clicked_button)
 
 # Unteres Viertel: Textfeld für die Logs
 st.text_area("Ausgabe", value=" ".join(st.session_state["logs"]), height=100)
