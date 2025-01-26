@@ -4,10 +4,10 @@ import time
 # Seitenkonfiguration für optimales Layout auf Mobilgeräten
 st.set_page_config(
     page_title="Hören Inventur Web App",
-    layout="centered"  # 'wide' kann ebenfalls ausprobiert werden
+    layout="centered"
 )
 
-# CSS zur Anpassung des Layouts auf mobilen Geräten
+# CSS für mobile Geräte – Override columns stacking für drei Spalten
 CUSTOM_CSS = """
 <style>
     /* Überschrift verkleinern */
@@ -33,13 +33,13 @@ CUSTOM_CSS = """
         height: 100px !important;
     }
 
-    /* Override columns stacking auf mobilen Geräten */
+    /* Override columns stacking auf mobilen Geräten für drei Spalten */
     @media (max-width: 768px) {
-        /* Ziel: Zwinge Streamlit-Spalten, nebeneinander zu bleiben */
+        /* Zwinge Streamlit-Spalten, drei Spalten nebeneinander zu bleiben */
         div[data-testid="columns"] > div {
-            flex: 0 0 45% !important; /* Zwei Spalten à 45% Breite */
-            max-width: 45% !important;
-            margin: 2.5% !important; /* Abstand zwischen den Spalten */
+            flex: 0 0 30% !important; /* Drei Spalten à 30% */
+            max-width: 30% !important;
+            margin: 1.666% !important; /* Abstand zwischen den Spalten */
         }
     }
 </style>
@@ -67,8 +67,8 @@ if "last_click_time" not in st.session_state:
 if "logs" not in st.session_state:
     st.session_state["logs"] = []
 
-# Anzahl der Spalten pro Reihe (2 für mobile Optimierung)
-buttons_per_row = 2  # Ändere auf 3, falls gewünscht
+# Anzahl der Spalten pro Reihe (3 für mobile Optimierung)
+buttons_per_row = 3
 
 # Funktion zur Aufteilung der Buttons in Gruppen
 def chunked(iterable, n):
