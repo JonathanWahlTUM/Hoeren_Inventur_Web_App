@@ -48,7 +48,7 @@ CUSTOM_CSS = """
 
     .button-row > div {
         flex: 1; /* Gleichmäßige Verteilung */
-        min-width: 100px; /* Mindestbreite für Buttons */
+        min-width: 80px; /* Mindestbreite für Buttons */
     }
 
     @media (max-width: 768px) {
@@ -87,9 +87,8 @@ if "last_click_time" not in st.session_state:
 if "logs" not in st.session_state:
     st.session_state["logs"] = []
 
-# Bestimme die Anzahl der Spalten pro Reihe (2 oder 3)
-# Für iPhones sind 2 Spalten oft besser geeignet
-buttons_per_row = 2  # Du kannst hier auf 3 ändern, wenn gewünscht
+# Anzahl der Spalten pro Reihe (3 für mehr Buttons pro Reihe)
+buttons_per_row = 3  # Du kannst hier auf 2 ändern, wenn gewünscht
 
 # Erstelle die Button-Reihen
 for row in chunked(button_definitions, buttons_per_row):
