@@ -40,6 +40,19 @@ CUSTOM_CSS = """
     .button-row {
         margin-bottom: 10px;
     }
+
+    /* Verhindern, dass die Buttons die ganze Breite einnehmen */
+    .button-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .button-container > div {
+        flex: 1 1 45%; /* Zwei Spalten mit etwas Abstand */
+        max-width: 45%;
+        margin: 5px;
+    }
 </style>
 """
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
@@ -71,17 +84,12 @@ if "last_click_time" not in st.session_state:
 if "logs" not in st.session_state:
     st.session_state["logs"] = []
 
-# Bestimme die Anzahl der Spalten pro Reihe (2 oder 3)
-# Für iPhones sind 2 Spalten oft besser geeignet
-buttons_per_row = 2
-
-# Anzahl der benötigten Reihen
-num_rows = ceil(len(button_definitions) / buttons_per_row)
+# Anzahl der Spalten pro Reihe (2 oder 3)
+buttons_per_row = 2  # Du kannst hier auf 3 ändern, wenn gewünscht
 
 # Erstelle die Button-Reihen
 for row in chunked(button_definitions, buttons_per_row):
     cols = st.columns(buttons_per_row)
-    st.markdown('<div class="button-row"></div>', unsafe_allow_html=True)  # Abstand zwischen Reihen
     for idx, label in enumerate(row):
         with cols[idx]:
             if st.button(label):
