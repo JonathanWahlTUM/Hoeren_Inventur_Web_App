@@ -8,7 +8,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# CSS für mobile Geräte – Minimale Anpassungen zur Vermeidung von Konflikten
+# Minimales CSS für mobile Geräte – Entfernt störende Stile
 CUSTOM_CSS = """
 <style>
     /* Anpassung der gesamten App-Padding für Mobilgeräte */
@@ -29,9 +29,8 @@ CUSTOM_CSS = """
         font-size: 14px !important;
         padding: 8px !important;
         height: 40px !important;
-        /* Entferne die feste Breite, damit die Buttons nebeneinander passen */
-        /* width: 100% !important; */
         min-width: 80px; /* Mindestbreite für Buttons */
+        /* Entferne feste Breitenangaben */
     }
 
     /* Textfeld an unteres Viertel anpassen */
