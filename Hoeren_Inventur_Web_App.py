@@ -7,28 +7,40 @@ st.set_page_config(
     layout="centered"
 )
 
-# Dynamische Größenanpassung für mobile Geräte
+# CSS für mobile Geräte – Anordnung und Schriftgröße anpassen
 CUSTOM_CSS = """
 <style>
-    @media only screen and (max-width: 768px) {
-        .stButton>button {
-            width: 100% !important;
-            font-size: 11px !important;
-            padding: 10px !important;
-        }
-        .stTextArea textarea {
-            font-size: 11px !important;
-        }
-        .stApp {
-            padding: 10px !important;
-        }
+    /* Anpassung der gesamten App-Padding für Mobilgeräte */
+    .stApp {
+        padding: 5px !important;
+    }
+
+    /* Überschrift verkleinern */
+    h1 {
+        font-size: 20px !important;
+        text-align: center !important;
+    }
+
+    /* Buttons in Reihen von je 3 oder 2 anzeigen */
+    .stButton>button {
+        width: 30% !important;
+        font-size: 14px !important;
+        margin: 5px auto !important;
+        display: inline-block !important;
+    }
+
+    /* Textfeld an unteres Viertel anpassen */
+    .stTextArea textarea {
+        font-size: 14px !important;
+        height: 100px !important;
     }
 </style>
 """
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
+# Oberes Viertel: Bild + Titel
 st.image("piktogramm.png", use_container_width=True)
-st.title("51 Minuten, 10.01.2024, 12.17 Uhr - München - Hören")
+st.markdown("<h1>51 Minuten, 10.01.2024, 12.17 Uhr - München - Hören</h1>", unsafe_allow_html=True)
 
 # Session State für 1-Sekunden-Sperre
 if "last_click_time" not in st.session_state:
@@ -38,38 +50,18 @@ if "logs" not in st.session_state:
     st.session_state["logs"] = []
 
 button_definitions = [
-    "Warnsignal",
-    "Autogeräusche",
-    "Zuggeräusche",
-    "Busgeräusche",
-    "Motorrollergeräusche",
-    "Schritte",
-    "Stimmen",
-    "Fahrstuhl",
-    "Husten",
-    "Durchsage",
-    "Rascheln",
-    "Klappern",
-    "Bremsgeräusch",
-    "Läuten",
-    "Vogelzwitschern",
-    "Rolltreppe",
-    "Tür",
-    "Hupen",
-    "Sirenen",
-    "Wind",
+    "Warnsignal", "Autogeräusche", "Zuggeräusche", "Busgeräusche",
+    "Motorrollergeräusche", "Schritte", "Stimmen", "Fahrstuhl",
+    "Husten", "Durchsage", "Rascheln", "Klappern",
+    "Bremsgeräusch", "Läuten", "Vogelzwitschern", "Rolltreppe",
+    "Tür", "Hupen", "Sirenen", "Wind"
 ]
 
-# Dynamische Anpassung der Spaltenanzahl für mobile Geräte
-if st.session_state.get("is_mobile", False):
-    N_COLS = 3  # Auf Mobilgeräten nur eine Spalte
-else:
-    N_COLS = 3  # Auf größeren Bildschirmen 3 Spalten
-
-cols = st.columns(N_COLS)
+# Buttons in zwei oder drei Reihen anzeigen
+cols = st.columns(3)  # 3 Spalten für mobile Ansicht
 
 for i, label in enumerate(button_definitions):
-    col_index = i % N_COLS
+    col_index = i % 3  # Verteilt Buttons auf 3 Spalten
     with cols[col_index]:
         if st.button(label):
             current_time = time.time()
@@ -79,5 +71,5 @@ for i, label in enumerate(button_definitions):
                 st.session_state["last_click_time"] = current_time
                 st.session_state["logs"].append(label)
 
-# Textbereich (unten)
+# Unteres Viertel: Textfeld für die Logs
 st.text_area("Ausgabe", value=" ".join(st.session_state["logs"]), height=100)
