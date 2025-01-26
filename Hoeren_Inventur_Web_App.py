@@ -85,7 +85,7 @@ if "logs" not in st.session_state:
     st.session_state["logs"] = []
 
 # Anzahl der Spalten pro Reihe (2 oder 3)
-buttons_per_row = 2  # Du kannst hier auf 3 ändern, wenn gewünscht
+buttons_per_row = 3  # Du kannst hier auf 3 ändern, wenn gewünscht
 
 # Erstelle die Button-Reihen
 for row in chunked(button_definitions, buttons_per_row):
