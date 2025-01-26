@@ -43,14 +43,14 @@ custom_css = """
         padding: 10px 0;
     }
 
-    /* Set stButton div to flex item */
-    .button-container > div {
+    /* Anpassung der stButton Klasse */
+    .button-container .stButton {
         flex: none;
         margin: 0 !important;
     }
 
-    /* Style the buttons */
-    .button-container > div > button {
+    /* Style die Buttons innerhalb des button-container */
+    .button-container .stButton button {
         font-size: 14px !important;
         padding: 5px 10px !important;
         height: 35px !important;
@@ -63,13 +63,13 @@ custom_css = """
         transition: background-color 0.3s !important;
     }
 
-    .button-container > div > button:hover {
+    .button-container .stButton button:hover {
         background-color: #0056b3 !important;
     }
 
     /* Responsive Anpassungen */
     @media (max-width: 768px) {
-        .button-container > div > button {
+        .button-container .stButton button {
             font-size: 12px !important;
             padding: 4px 8px !important;
             height: 30px !important;
