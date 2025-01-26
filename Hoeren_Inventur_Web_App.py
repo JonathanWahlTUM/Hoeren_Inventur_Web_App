@@ -43,27 +43,33 @@ custom_css = """
         padding: 10px 0;
     }
 
-    .stButton > button {
+    /* Set stButton div to flex item */
+    .button-container > div {
+        flex: none;
+        margin: 0 !important;
+    }
+
+    /* Style the buttons */
+    .button-container > div > button {
         font-size: 14px !important;
         padding: 5px 10px !important;
         height: 35px !important;
         min-width: 70px !important;
-        margin: 0 !important;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
+        background-color: #007bff !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 5px !important;
+        cursor: pointer !important;
+        transition: background-color 0.3s !important;
     }
 
-    .stButton > button:hover {
+    .button-container > div > button:hover {
         background-color: #0056b3 !important;
     }
 
     /* Responsive Anpassungen */
     @media (max-width: 768px) {
-        .stButton > button {
+        .button-container > div > button {
             font-size: 12px !important;
             padding: 4px 8px !important;
             height: 30px !important;
