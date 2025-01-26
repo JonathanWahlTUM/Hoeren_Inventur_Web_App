@@ -11,27 +11,17 @@ st.set_page_config(
 CUSTOM_CSS = """
 <style>
     .button-container {
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: row;
-        justify-content: flex-start;
-        gap: 5px;
-        padding: 10px;
-        width: 100%;
+        display: block;
+        white-space: nowrap;
+        overflow-x: auto;
     }
 
     .stButton>button {
+        display: inline-block;
         font-size: 14px !important;
         padding: 5px 10px !important;
         height: 40px !important;
-        min-width: 90px;
-        margin: 2px;
-    }
-
-    @media (max-width: 768px) {
-        .button-container {
-            gap: 2px;
-        }
+        margin-right: 5px;
     }
 </style>
 """
