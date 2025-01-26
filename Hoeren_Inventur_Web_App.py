@@ -27,8 +27,6 @@ CUSTOM_CSS = """
     .stButton>button {
         font-size: 14px !important;
         padding: 8px !important;
-        /* Entferne die feste Breite, damit die Buttons in Spalten passen */
-        /* width: 100% !important; */
         height: 40px !important;
     }
 
@@ -73,8 +71,8 @@ if "last_click_time" not in st.session_state:
 if "logs" not in st.session_state:
     st.session_state["logs"] = []
 
-# Anzahl der Spalten pro Reihe (2 für mobile Optimierung)
-buttons_per_row = 2  # Du kannst hier auf 3 ändern, wenn gewünscht
+# Anzahl der Spalten pro Reihe (3 für mehr Buttons pro Reihe)
+buttons_per_row = 3  # Du kannst hier auf 2 ändern, wenn gewünscht
 
 # Erstelle die Button-Reihen
 for row in chunked(button_definitions, buttons_per_row):
