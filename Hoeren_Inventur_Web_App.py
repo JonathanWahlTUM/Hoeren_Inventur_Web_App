@@ -8,7 +8,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# CSS für mobile Geräte – Anordnung und Schriftgröße anpassen
+# CSS für mobile Geräte – Minimale Anpassungen zur Vermeidung von Konflikten
 CUSTOM_CSS = """
 <style>
     /* Anpassung der gesamten App-Padding für Mobilgeräte */
@@ -29,33 +29,15 @@ CUSTOM_CSS = """
         font-size: 14px !important;
         padding: 8px !important;
         height: 40px !important;
-        width: 100% !important; /* Buttons füllen die Spaltenbreite */
+        /* Entferne die feste Breite, damit die Buttons nebeneinander passen */
+        /* width: 100% !important; */
+        min-width: 80px; /* Mindestbreite für Buttons */
     }
 
     /* Textfeld an unteres Viertel anpassen */
     .stTextArea textarea {
         font-size: 14px !important;
         height: 100px !important;
-    }
-
-    /* Grid Layout für Buttons */
-    .button-row {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin-bottom: 10px;
-    }
-
-    .button-row > div {
-        flex: 1; /* Gleichmäßige Verteilung */
-        min-width: 80px; /* Mindestbreite für Buttons */
-    }
-
-    @media (max-width: 768px) {
-        .button-row {
-            flex-direction: row;
-            flex-wrap: wrap;
-        }
     }
 </style>
 """
@@ -87,13 +69,12 @@ if "last_click_time" not in st.session_state:
 if "logs" not in st.session_state:
     st.session_state["logs"] = []
 
-# Anzahl der Spalten pro Reihe (3 für mehr Buttons pro Reihe)
-buttons_per_row = 3  # Du kannst hier auf 2 ändern, wenn gewünscht
+# Anzahl der Spalten pro Reihe (2 für mobile Optimierung)
+buttons_per_row = 2  # Ändere auf 3, falls gewünscht
 
 # Erstelle die Button-Reihen
 for row in chunked(button_definitions, buttons_per_row):
     cols = st.columns(buttons_per_row)
-    st.markdown('<div class="button-row">', unsafe_allow_html=True)
     for col, label in zip(cols, row):
         with col:
             if st.button(label):
@@ -103,7 +84,6 @@ for row in chunked(button_definitions, buttons_per_row):
                 else:
                     st.session_state["last_click_time"] = current_time
                     st.session_state["logs"].append(label)
-    st.markdown('</div>', unsafe_allow_html=True)
 
 # Unteres Viertel: Textfeld für die Logs
 st.text_area("Ausgabe", value=" ".join(st.session_state["logs"]), height=100)
