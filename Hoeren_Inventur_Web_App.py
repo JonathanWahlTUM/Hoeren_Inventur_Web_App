@@ -7,7 +7,7 @@ st.set_page_config(
     layout="centered"  # Optimal für mobile Geräte
 )
 
-# Button-Beschriftungen
+# Liste der Button-Beschriftungen
 button_definitions = [
     "Warnsignal", "Autogeräusche", "Zuggeräusche", "Busgeräusche",
     "Motorrollergeräusche", "Schritte", "Stimmen", "Fahrstuhl",
@@ -16,7 +16,7 @@ button_definitions = [
     "Tür", "Hupen", "Sirenen", "Wind"
 ]
 
-# Session State
+# Session State initialisieren
 if "last_click_time" not in st.session_state:
     st.session_state["last_click_time"] = 0.0
 
@@ -34,18 +34,17 @@ st.markdown("""
 # Ausgabe-Textfeld (nur einmal)
 st.text_area("Ausgabe", value=" ".join(st.session_state["logs"]), height=100)
 
-# Buttons: Arrange in multiple rows of columns
-cols_per_row = 2  # Für mobile Geräte optimiert
+# Buttons: Arrange in a single row, centered
+# Achtung: Auf mobilen Geräten kann dies zu sehr kleinen Buttons führen
+cols = st.columns(len(button_definitions))
 
-for i in range(0, len(button_definitions), cols_per_row):
-    cols = st.columns(cols_per_row)
-    for j, label in enumerate(button_definitions[i:i + cols_per_row]):
-        with cols[j]:
-            if st.button(label, key=label):
-                current_time = time.time()
-                # Prüfe die 1-Sekunden-Sperre
-                if current_time - st.session_state["last_click_time"] < 1:
-                    st.warning("Bitte warte 1 Sekunde zwischen den Klicks!")
-                else:
-                    st.session_state["last_click_time"] = current_time
-                    st.session_state["logs"].append(label)
+for idx, label in enumerate(button_definitions):
+    with cols[idx]:
+        if st.button(label, key=label):
+            current_time = time.time()
+            # Prüfe die 1-Sekunden-Sperre
+            if current_time - st.session_state["last_click_time"] < 1:
+                st.warning("Bitte warte 1 Sekunde zwischen den Klicks!")
+            else:
+                st.session_state["last_click_time"] = current_time
+                st.session_state["logs"].append(label)
