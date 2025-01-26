@@ -21,6 +21,7 @@ CUSTOM_CSS = """
         font-size: 20px !important;
         text-align: center !important;
         margin-top: 10px;
+        margin-bottom: 20px;
     }
 
     /* Buttons styling */
@@ -28,6 +29,7 @@ CUSTOM_CSS = """
         font-size: 14px !important;
         padding: 8px !important;
         height: 40px !important;
+        width: 100% !important; /* Buttons füllen die Spaltenbreite */
     }
 
     /* Textfeld an unteres Viertel anpassen */
@@ -36,9 +38,24 @@ CUSTOM_CSS = """
         height: 100px !important;
     }
 
-    /* Abstand zwischen den Button-Reihen */
+    /* Grid Layout für Buttons */
     .button-row {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
         margin-bottom: 10px;
+    }
+
+    .button-row > div {
+        flex: 1; /* Gleichmäßige Verteilung */
+        min-width: 100px; /* Mindestbreite für Buttons */
+    }
+
+    @media (max-width: 768px) {
+        .button-row {
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
     }
 </style>
 """
@@ -51,9 +68,8 @@ def chunked(iterable, n):
         yield iterable[i:i + n]
 
 # Oberes Viertel: Bild + Titel
-with st.container():
-    st.image("piktogramm.png", use_container_width=True)
-    st.markdown("<h1>51 Minuten, 10.01.2024, 12.17 Uhr - München - Hören</h1>", unsafe_allow_html=True)
+st.image("piktogramm.png", use_container_width=True)
+st.markdown("<h1>51 Minuten, 10.01.2024, 12.17 Uhr - München - Hören</h1>", unsafe_allow_html=True)
 
 # Mittlere zwei Viertel: Buttons
 button_definitions = [
@@ -71,14 +87,16 @@ if "last_click_time" not in st.session_state:
 if "logs" not in st.session_state:
     st.session_state["logs"] = []
 
-# Anzahl der Spalten pro Reihe (3 für mehr Buttons pro Reihe)
-buttons_per_row = 3  # Du kannst hier auf 2 ändern, wenn gewünscht
+# Bestimme die Anzahl der Spalten pro Reihe (2 oder 3)
+# Für iPhones sind 2 Spalten oft besser geeignet
+buttons_per_row = 2  # Du kannst hier auf 3 ändern, wenn gewünscht
 
 # Erstelle die Button-Reihen
 for row in chunked(button_definitions, buttons_per_row):
     cols = st.columns(buttons_per_row)
-    for idx, label in enumerate(row):
-        with cols[idx]:
+    st.markdown('<div class="button-row">', unsafe_allow_html=True)
+    for col, label in zip(cols, row):
+        with col:
             if st.button(label):
                 current_time = time.time()
                 if current_time - st.session_state["last_click_time"] < 1:
@@ -86,7 +104,7 @@ for row in chunked(button_definitions, buttons_per_row):
                 else:
                     st.session_state["last_click_time"] = current_time
                     st.session_state["logs"].append(label)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # Unteres Viertel: Textfeld für die Logs
-with st.container():
-    st.text_area("Ausgabe", value=" ".join(st.session_state["logs"]), height=100)
+st.text_area("Ausgabe", value=" ".join(st.session_state["logs"]), height=100)
