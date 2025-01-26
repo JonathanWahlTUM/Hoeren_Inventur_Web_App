@@ -10,36 +10,27 @@ st.set_page_config(
 # CSS zur Anpassung des Layouts für einen Fließtext-Stil
 CUSTOM_CSS = """
 <style>
-    /* Überschrift verkleinern */
-    h1 {
-        font-size: 20px !important;
-        text-align: center !important;
-        margin-top: 10px;
-        margin-bottom: 20px;
-    }
-
-    /* Buttons Styling */
-    .stButton>button {
-        font-size: 14px !important;
-        padding: 5px !important;
-        height: 35px !important;
-        min-width: 70px;
-        margin: 2px;
-    }
-
-    /* Flexbox Layout für Buttons als Fließtext */
     .button-container {
-        display: inline-flex;
+        display: flex;
         flex-wrap: wrap;
-        gap: 5px;
+        flex-direction: row;
         justify-content: flex-start;
+        gap: 5px;
         padding: 10px;
         width: 100%;
     }
 
+    .stButton>button {
+        font-size: 14px !important;
+        padding: 5px 10px !important;
+        height: 40px !important;
+        min-width: 90px;
+        margin: 2px;
+    }
+
     @media (max-width: 768px) {
         .button-container {
-            gap: 3px;
+            gap: 2px;
         }
     }
 </style>
