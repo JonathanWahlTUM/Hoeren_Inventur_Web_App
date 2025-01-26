@@ -4,10 +4,10 @@ import time
 # Seitenkonfiguration für optimales Layout auf Mobilgeräten
 st.set_page_config(
     page_title="Hören Inventur Web App",
-    layout="centered"  # Alternativ 'wide' ausprobieren
+    layout="centered"
 )
 
-# CSS zur Anpassung des Layouts auf mobilen Geräten
+# CSS zur Anpassung des Layouts für einen Fließtext-Stil
 CUSTOM_CSS = """
 <style>
     /* Überschrift verkleinern */
@@ -23,28 +23,23 @@ CUSTOM_CSS = """
         font-size: 14px !important;
         padding: 5px !important;
         height: 35px !important;
-        min-width: 70px; /* Mindestbreite für Buttons */
-        margin: 2px; /* Minimaler Abstand zwischen Buttons */
+        min-width: 70px;
+        margin: 2px;
     }
 
-    /* Textfeld an unteres Viertel anpassen */
-    .stTextArea textarea {
-        font-size: 14px !important;
-        height: 100px !important;
-    }
-
-    /* Flexbox Layout für Buttons */
+    /* Flexbox Layout für Buttons als Fließtext */
     .button-container {
-        display: flex;
+        display: inline-flex;
         flex-wrap: wrap;
-        gap: 5px; /* Abstand zwischen den Buttons */
-        justify-content: center; /* Zentriert die Buttons horizontal */
+        gap: 5px;
+        justify-content: flex-start;
         padding: 10px;
+        width: 100%;
     }
 
     @media (max-width: 768px) {
         .button-container {
-            gap: 3px; /* Weniger Abstand auf kleineren Bildschirmen */
+            gap: 3px;
         }
     }
 </style>
@@ -72,12 +67,10 @@ if "last_click_time" not in st.session_state:
 if "logs" not in st.session_state:
     st.session_state["logs"] = []
 
-# Define a container div with class "button-container"
+# Platzieren der Buttons innerhalb des Flex-Containers für Fließtext-Anordnung
 st.markdown('<div class="button-container">', unsafe_allow_html=True)
 
-# Platzieren der Buttons innerhalb des Flex-Containers
 for label in button_definitions:
-    # Jeder Button erhält einen eindeutigen Schlüssel
     if st.button(label, key=label):
         current_time = time.time()
         if current_time - st.session_state["last_click_time"] < 1:
