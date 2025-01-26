@@ -25,9 +25,11 @@ CUSTOM_CSS = """
 
     /* Buttons styling */
     .stButton>button {
-        width: 100% !important; /* Füllt die Spalte vollständig */
         font-size: 14px !important;
-        padding: 10px !important;
+        padding: 8px !important;
+        /* Entferne die feste Breite, damit die Buttons in Spalten passen */
+        /* width: 100% !important; */
+        height: 40px !important;
     }
 
     /* Textfeld an unteres Viertel anpassen */
@@ -39,19 +41,6 @@ CUSTOM_CSS = """
     /* Abstand zwischen den Button-Reihen */
     .button-row {
         margin-bottom: 10px;
-    }
-
-    /* Verhindern, dass die Buttons die ganze Breite einnehmen */
-    .button-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .button-container > div {
-        flex: 1 1 45%; /* Zwei Spalten mit etwas Abstand */
-        max-width: 45%;
-        margin: 5px;
     }
 </style>
 """
@@ -84,8 +73,8 @@ if "last_click_time" not in st.session_state:
 if "logs" not in st.session_state:
     st.session_state["logs"] = []
 
-# Anzahl der Spalten pro Reihe (2 oder 3)
-buttons_per_row = 3  # Du kannst hier auf 3 ändern, wenn gewünscht
+# Anzahl der Spalten pro Reihe (2 für mobile Optimierung)
+buttons_per_row = 2  # Du kannst hier auf 3 ändern, wenn gewünscht
 
 # Erstelle die Button-Reihen
 for row in chunked(button_definitions, buttons_per_row):
