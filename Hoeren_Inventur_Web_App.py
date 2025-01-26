@@ -43,11 +43,12 @@ custom_css = """
         padding: 10px 0;
     }
 
-    .button-container button {
-        font-size: 14px;
-        padding: 5px 10px;
-        height: 35px;
-        min-width: 70px;
+    .stButton > button {
+        font-size: 14px !important;
+        padding: 5px 10px !important;
+        height: 35px !important;
+        min-width: 70px !important;
+        margin: 0 !important;
         background-color: #007bff;
         color: white;
         border: none;
@@ -56,51 +57,44 @@ custom_css = """
         transition: background-color 0.3s;
     }
 
-    .button-container button:hover {
-        background-color: #0056b3;
+    .stButton > button:hover {
+        background-color: #0056b3 !important;
     }
 
-    /* Verberge das "Letzter Klick" Textfeld */
-    #streamlit-data {
-        display: none;
+    /* Responsive Anpassungen */
+    @media (max-width: 768px) {
+        .stButton > button {
+            font-size: 12px !important;
+            padding: 4px 8px !important;
+            height: 30px !important;
+            min-width: 60px !important;
+        }
     }
 </style>
 """
 
-# HTML-Buttons als Fließtext-Elemente
-button_html = " ".join([
-    f'<button onclick="send_value(\'{label}\')">{label}</button>' for label in button_definitions
-])
+# Anwenden des CSS
+st.markdown(custom_css, unsafe_allow_html=True)
 
-# JavaScript für Button-Handling
-js_code = """
-<script>
-    function send_value(value) {
-        var streamlit_data = window.parent.document.getElementById("streamlit-data");
-        if(streamlit_data){
-            streamlit_data.value = value;
-            streamlit_data.dispatchEvent(new Event('input'));
-        }
-    }
-</script>
-<input type="hidden" id="streamlit-data" />
-"""
+# Oberes Viertel: Bild + Titel
+st.image("piktogramm.png", use_container_width=True)
+st.markdown("<h1>51 Minuten, 10.01.2024, 12.17 Uhr - München - Hören</h1>", unsafe_allow_html=True)
 
-# Anwenden des CSS, der Buttons und des JavaScript-Codes
-st.markdown(custom_css + f'<div class="button-container">{button_html}</div>' + js_code, unsafe_allow_html=True)
+# Button-Container starten
+st.markdown('<div class="button-container">', unsafe_allow_html=True)
 
-# Streamlit Event-Handler, um das geklickte Element zu speichern
-# Hinweis: "Letzter Klick" ist nun ohne sichtbares Label
-clicked_button = st.text_input("", key="streamlit-data", value="", placeholder="", label_visibility="hidden")
+# Platzieren der Buttons innerhalb des Flex-Containers
+for label in button_definitions:
+    if st.button(label, key=label):
+        current_time = time.time()
+        if current_time - st.session_state["last_click_time"] < 1:
+            st.warning("Bitte warte 1 Sekunde zwischen den Klicks!")
+        else:
+            st.session_state["last_click_time"] = current_time
+            st.session_state["logs"].append(label)
 
-# Wenn ein Button geklickt wird, speichere ihn im Session State
-if clicked_button:
-    current_time = time.time()
-    if current_time - st.session_state["last_click_time"] < 1:
-        st.warning("Bitte warte 1 Sekunde zwischen den Klicks!")
-    else:
-        st.session_state["last_click_time"] = current_time
-        st.session_state["logs"].append(clicked_button)
+# Button-Container schließen
+st.markdown('</div>', unsafe_allow_html=True)
 
 # Unteres Viertel: Textfeld für die Logs
 st.text_area("Ausgabe", value=" ".join(st.session_state["logs"]), height=100)
