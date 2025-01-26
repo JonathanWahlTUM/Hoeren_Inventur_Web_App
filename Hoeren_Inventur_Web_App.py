@@ -23,30 +23,100 @@ if "last_click_time" not in st.session_state:
 if "logs" not in st.session_state:
     st.session_state["logs"] = []
 
-# Oberes Viertel: Bild + Titel
-st.image("piktogramm.png", use_container_width=True)
-st.markdown("""
-    <h1 style='font-size:20px; text-align:center; margin-top:10px; margin-bottom:20px;'>
-        51 Minuten, 10.01.2024, 12.17 Uhr - München - Hören
-    </h1>
-    """, unsafe_allow_html=True)
+# Minimaler CSS zur Anpassung des Layouts
+custom_css = """
+<style>
+    /* Überschrift verkleinern und zentrieren */
+    h1 {
+        font-size: 20px !important;
+        text-align: center !important;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
 
-# Anzahl der Spalten pro Zeile
-cols_per_row = 3  # Passe dies je nach Bildschirmgröße an (z.B. 2 für Mobile)
+    /* Container für die Buttons */
+    .button-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+        gap: 5px;
+        justify-items: center;
+        padding: 10px 0;
+    }
 
-# Platzieren der Buttons in mehreren Spalten
-for i in range(0, len(button_definitions), cols_per_row):
-    # Erstelle eine Zeile mit `cols_per_row` Spalten
-    cols = st.columns(cols_per_row)
-    for j, label in enumerate(button_definitions[i:i + cols_per_row]):
-        with cols[j]:
-            if st.button(label, key=label):
-                current_time = time.time()
-                if current_time - st.session_state["last_click_time"] < 1:
-                    st.warning("Bitte warte 1 Sekunde zwischen den Klicks!")
-                else:
-                    st.session_state["last_click_time"] = current_time
-                    st.session_state["logs"].append(label)
+    /* Buttons Styling */
+    .button-container button {
+        width: 100%;
+        max-width: 80px;
+        font-size: 14px;
+        padding: 5px 10px;
+        height: 35px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        box-sizing: border-box;
+    }
+
+    .button-container button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Responsive Anpassungen */
+    @media (max-width: 768px) {
+        .button-container button {
+            font-size: 12px;
+            padding: 4px 8px;
+            height: 30px;
+            max-width: 70px;
+            min-width: 50px;
+        }
+    }
+
+    /* Verberge das "Letzter Klick" Textfeld */
+    #streamlit-data {
+        display: none;
+    }
+</style>
+"""
+
+# JavaScript für Button-Handling
+js_code = """
+<script>
+    function send_value(value) {
+        var streamlit_data = window.parent.document.getElementById("streamlit-data");
+        if(streamlit_data){
+            streamlit_data.value = value;
+            streamlit_data.dispatchEvent(new Event('input'));
+        }
+    }
+</script>
+<input type="hidden" id="streamlit-data" />
+"""
+
+# HTML-Buttons als Fließtext-Elemente
+button_html = " ".join([
+    f'<button onclick="send_value(\'{label}\')">{label}</button>' for label in button_definitions
+])
+
+# Anwenden des CSS, der Buttons und des JavaScript-Codes
+st.markdown(custom_css + f'<div class="button-container">{button_html}</div>' + js_code, unsafe_allow_html=True)
+
+# Streamlit Event-Handler, um das geklickte Element zu speichern
+# Verwende ein verstecktes Textfeld, um den Wert zu erfassen
+clicked_button = st.text_input("", key="streamlit-data", value="", placeholder="", label_visibility="hidden")
+
+# Wenn ein Button geklickt wird, speichere ihn im Session State
+if clicked_button:
+    current_time = time.time()
+    if current_time - st.session_state["last_click_time"] < 1:
+        st.warning("Bitte warte 1 Sekunde zwischen den Klicks!")
+    else:
+        st.session_state["last_click_time"] = current_time
+        st.session_state["logs"].append(clicked_button)
+        # Leere das versteckte Textfeld nach dem Speichern
+        st.session_state["streamlit-data"] = ""
 
 # Unteres Viertel: Textfeld für die Logs
 st.text_area("Ausgabe", value=" ".join(st.session_state["logs"]), height=100)
