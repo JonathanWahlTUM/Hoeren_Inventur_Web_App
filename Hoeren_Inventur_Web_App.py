@@ -4,7 +4,7 @@ import time
 # Seitenkonfiguration für optimales Layout auf Mobilgeräten
 st.set_page_config(
     page_title="Hören Inventur Web App",
-    layout="centered"
+    layout="centered"  # Alternativ 'wide' ausprobieren
 )
 
 # CSS zur Anpassung des Layouts auf mobilen Geräten
@@ -21,10 +21,10 @@ CUSTOM_CSS = """
     /* Buttons Styling */
     .stButton>button {
         font-size: 14px !important;
-        padding: 8px !important;
-        height: 40px !important;
-        min-width: 80px; /* Mindestbreite für Buttons */
-        margin: 2px; /* Geringer Abstand zwischen Buttons */
+        padding: 5px !important;
+        height: 35px !important;
+        min-width: 70px; /* Mindestbreite für Buttons */
+        margin: 1px; /* Minimaler Abstand zwischen Buttons */
     }
 
     /* Textfeld an unteres Viertel anpassen */
@@ -33,10 +33,19 @@ CUSTOM_CSS = """
         height: 100px !important;
     }
 
-    /* Override columns stacking auf mobilen Geräten für zwei Spalten */
+    /* Override columns stacking auf mobilen Geräten für drei Spalten */
     @media (max-width: 768px) {
-        /* Zwinge Streamlit-Spalten, zwei Spalten nebeneinander zu bleiben */
-        div[data-testid="columns"] > div {
+        /* Zwinge Streamlit-Spalten, drei Spalten nebeneinander zu bleiben */
+        div[data-testid^="column"] > div {
+            flex: 0 0 30% !important; /* Drei Spalten à 30% */
+            max-width: 30% !important;
+            margin: 1.66% !important; /* Minimaler Abstand zwischen den Spalten */
+        }
+    }
+
+    /* Zusätzliche Anpassungen für sehr kleine Bildschirme */
+    @media (max-width: 480px) {
+        div[data-testid^="column"] > div {
             flex: 0 0 48% !important; /* Zwei Spalten à 48% */
             max-width: 48% !important;
             margin: 1% !important; /* Minimaler Abstand zwischen den Spalten */
@@ -67,8 +76,8 @@ if "last_click_time" not in st.session_state:
 if "logs" not in st.session_state:
     st.session_state["logs"] = []
 
-# Anzahl der Spalten pro Reihe (2 für mobile Optimierung)
-buttons_per_row = 2
+# Anzahl der Spalten pro Reihe (3 für Desktop und Landscape, 2 für Portrait)
+buttons_per_row = 3
 
 # Funktion zur Aufteilung der Buttons in Gruppen
 def chunked(iterable, n):
