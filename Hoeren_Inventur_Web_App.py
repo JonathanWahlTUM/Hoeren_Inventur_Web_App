@@ -33,19 +33,18 @@ CUSTOM_CSS = """
         height: 100px !important;
     }
 
-    /* Grid Layout für Buttons */
+    /* Flexbox Layout für Buttons */
     .button-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-        gap: 5px;
-        justify-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px; /* Abstand zwischen den Buttons */
+        justify-content: center; /* Zentriert die Buttons horizontal */
         padding: 10px;
     }
 
     @media (max-width: 768px) {
         .button-container {
-            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-            gap: 3px;
+            gap: 3px; /* Weniger Abstand auf kleineren Bildschirmen */
         }
     }
 </style>
@@ -76,7 +75,7 @@ if "logs" not in st.session_state:
 # Define a container div with class "button-container"
 st.markdown('<div class="button-container">', unsafe_allow_html=True)
 
-# Platzieren der Buttons innerhalb des Grid-Containers
+# Platzieren der Buttons innerhalb des Flex-Containers
 for label in button_definitions:
     # Jeder Button erhält einen eindeutigen Schlüssel
     if st.button(label, key=label):
