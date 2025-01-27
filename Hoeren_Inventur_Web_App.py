@@ -4,54 +4,10 @@ import time
 # Seitenkonfiguration für optimales Layout auf Mobilgeräten
 st.set_page_config(
     page_title="Hören Inventur Web App",
-    layout="centered"
+    layout="centered"  # Optimal für mobile Geräte
 )
 
-# CSS zur Anpassung des Layouts für einen Fließtext-Stil
-CUSTOM_CSS = """
-<style>
-    /* Überschrift verkleinern */
-    h1 {
-        font-size: 20px !important;
-        text-align: center !important;
-        margin-top: 10px;
-        margin-bottom: 20px;
-    }
-
-    /* Buttons Styling */
-    .stButton>button {
-        font-size: 14px !important;
-        padding: 5px !important;
-        height: 35px !important;
-        min-width: 70px;
-        margin: 2px;
-    }
-
-    /* Flexbox Layout für Buttons als Fließtext */
-    .button-container {
-        display: inline-flex;
-        flex-wrap: wrap;
-        gap: 5px;
-        justify-content: flex-start;
-        padding: 10px;
-        width: 100%;
-    }
-
-    @media (max-width: 768px) {
-        .button-container {
-            gap: 3px;
-        }
-    }
-</style>
-"""
-
-st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
-
-# Oberes Viertel: Bild + Titel
-st.image("piktogramm.png", use_container_width=True)
-st.markdown("<h1>51 Minuten, 10.01.2024, 12.17 Uhr - München - Hören</h1>", unsafe_allow_html=True)
-
-# Mittlere zwei Viertel: Buttons
+# Liste der Button-Beschriftungen
 button_definitions = [
     "Warnsignal", "Autogeräusche", "Zuggeräusche", "Busgeräusche",
     "Motorrollergeräusche", "Schritte", "Stimmen", "Fahrstuhl",
@@ -60,14 +16,76 @@ button_definitions = [
     "Tür", "Hupen", "Sirenen", "Wind"
 ]
 
-# Session State für 1-Sekunden-Sperre und Logs
+# Session State initialisieren
 if "last_click_time" not in st.session_state:
     st.session_state["last_click_time"] = 0.0
 
 if "logs" not in st.session_state:
     st.session_state["logs"] = []
 
-# Platzieren der Buttons innerhalb des Flex-Containers für Fließtext-Anordnung
+# Minimaler CSS zur Anpassung des Layouts
+CUSTOM_CSS = """
+<style>
+    /* Überschrift verkleinern und zentrieren */
+    h1 {
+        font-size: 20px !important;
+        text-align: center !important;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    /* Container für die Buttons */
+    .button-container {
+        display: flex;
+        justify-content: center; /* Zentriert die Buttons */
+        flex-wrap: wrap; /* Ermöglicht das Umbrechen bei kleineren Bildschirmen */
+        gap: 10px; /* Abstand zwischen den Buttons */
+        padding: 10px 0;
+    }
+
+    /* Buttons Styling */
+    .stButton > button {
+        font-size: 16px !important; /* Größere Schriftgröße */
+        padding: 10px 20px !important; /* Größeres Padding */
+        height: 50px !important; /* Größere Höhe */
+        min-width: 120px !important; /* Mindestbreite erhöhen */
+        max-width: 200px !important; /* Maximale Breite festlegen */
+        background-color: #007bff !important; /* Button-Farbe */
+        color: white !important; /* Textfarbe */
+        border: none !important; /* Kein Rahmen */
+        border-radius: 8px !important; /* Abgerundete Ecken */
+        cursor: pointer !important; /* Cursor ändert sich zu Pointer */
+        transition: background-color 0.3s !important; /* Hover-Effekt */
+    }
+
+    .stButton > button:hover {
+        background-color: #0056b3 !important; /* Dunklere Farbe beim Hover */
+    }
+
+    /* Responsive Anpassungen */
+    @media (max-width: 768px) {
+        .stButton > button {
+            font-size: 14px !important;
+            padding: 8px 16px !important;
+            height: 45px !important;
+            min-width: 100px !important;
+            max-width: 150px !important;
+        }
+    }
+</style>
+"""
+
+# Anwenden des CSS
+st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
+
+# Oberes Viertel: Bild + Titel
+st.image("piktogramm.png", use_container_width=True)
+st.markdown("<h1>51 Minuten, 10.01.2024, 12.17 Uhr - München - Hören</h1>", unsafe_allow_html=True)
+
+# Mittleres Viertel: Ausgabe-Textfeld (nur einmal)
+st.text_area("Ausgabe", value=" ".join(st.session_state["logs"]), height=100)
+
+# Buttons: Arrange in a flex container
 st.markdown('<div class="button-container">', unsafe_allow_html=True)
 
 for label in button_definitions:
@@ -80,6 +98,3 @@ for label in button_definitions:
             st.session_state["logs"].append(label)
 
 st.markdown('</div>', unsafe_allow_html=True)
-
-# Unteres Viertel: Textfeld für die Logs
-st.text_area("Ausgabe", value=" ".join(st.session_state["logs"]), height=100)
