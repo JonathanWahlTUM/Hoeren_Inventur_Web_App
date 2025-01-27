@@ -34,15 +34,6 @@ CUSTOM_CSS = """
         margin-bottom: 20px;
     }
 
-    /* Container für die Buttons */
-    .button-container {
-        display: flex;
-        justify-content: center; /* Zentriert die Buttons */
-        flex-wrap: wrap; /* Ermöglicht das Umbrechen bei kleineren Bildschirmen */
-        gap: 10px; /* Abstand zwischen den Buttons */
-        padding: 10px 0;
-    }
-
     /* Buttons Styling */
     .stButton > button {
         font-size: 16px !important; /* Größere Schriftgröße */
@@ -85,29 +76,24 @@ st.markdown("<h1>51 Minuten, 10.01.2024, 12.17 Uhr - München - Hören</h1>", un
 # Mittleres Viertel: Ausgabe-Textfeld (nur einmal)
 st.text_area("Ausgabe", value=" ".join(st.session_state["logs"]), height=100)
 
-# Buttons: Arrange in two rows
-# Teilen der Button-Liste in zwei Hälften
-mid_index = len(button_definitions) // 2
-first_half = button_definitions[:mid_index]
-second_half = button_definitions[mid_index:]
+# Funktion zum Aufteilen der Liste in Chunks
+def chunk_list(lst, n):
+    """Teilt die Liste lst in Chunks von Größe n."""
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
 
-def create_button_row(buttons):
-    # Anzahl der Spalten pro Reihe anpassen, z.B. 5 pro Reihe für 10 Buttons insgesamt
-    cols_per_row = len(buttons)  # Alle Buttons in einer Reihe
+# Buttons: Arrange in a grid-like pattern (4 columns per row)
+cols_per_row = 4  # Anzahl der Spalten pro Zeile (für ein 4x5 Grid)
+
+for row_buttons in chunk_list(button_definitions, cols_per_row):
     cols = st.columns(cols_per_row)
-    for i, label in enumerate(buttons):
-        with cols[i]:
+    for col, label in zip(cols, row_buttons):
+        with col:
             if st.button(label, key=label):
                 current_time = time.time()
                 # Prüfe die 1-Sekunden-Sperre
                 if current_time - st.session_state["last_click_time"] < 1:
-                    st.warning("Bitte warte 1 Sekunde zwischen den Klicks!")
+                    st.warning("noch keine Sekunde vergangen")
                 else:
                     st.session_state["last_click_time"] = current_time
                     st.session_state["logs"].append(label)
-
-# Erste Reihe der Buttons
-create_button_row(first_half)
-
-# Zweite Reihe der Buttons
-create_button_row(second_half)
