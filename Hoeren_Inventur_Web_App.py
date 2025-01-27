@@ -85,16 +85,29 @@ st.markdown("<h1>51 Minuten, 10.01.2024, 12.17 Uhr - München - Hören</h1>", un
 # Mittleres Viertel: Ausgabe-Textfeld (nur einmal)
 st.text_area("Ausgabe", value=" ".join(st.session_state["logs"]), height=100)
 
-# Buttons: Arrange in a flex container
-st.markdown('<div class="button-container">', unsafe_allow_html=True)
+# Buttons: Arrange in two rows
+# Teilen der Button-Liste in zwei Hälften
+mid_index = len(button_definitions) // 2
+first_half = button_definitions[:mid_index]
+second_half = button_definitions[mid_index:]
 
-for label in button_definitions:
-    if st.button(label, key=label):
-        current_time = time.time()
-        if current_time - st.session_state["last_click_time"] < 1:
-            st.warning("Bitte warte 1 Sekunde zwischen den Klicks!")
-        else:
-            st.session_state["last_click_time"] = current_time
-            st.session_state["logs"].append(label)
+def create_button_row(buttons):
+    # Anzahl der Spalten pro Reihe anpassen, z.B. 5 pro Reihe für 10 Buttons insgesamt
+    cols_per_row = len(buttons)  # Alle Buttons in einer Reihe
+    cols = st.columns(cols_per_row)
+    for i, label in enumerate(buttons):
+        with cols[i]:
+            if st.button(label, key=label):
+                current_time = time.time()
+                # Prüfe die 1-Sekunden-Sperre
+                if current_time - st.session_state["last_click_time"] < 1:
+                    st.warning("Bitte warte 1 Sekunde zwischen den Klicks!")
+                else:
+                    st.session_state["last_click_time"] = current_time
+                    st.session_state["logs"].append(label)
 
-st.markdown('</div>', unsafe_allow_html=True)
+# Erste Reihe der Buttons
+create_button_row(first_half)
+
+# Zweite Reihe der Buttons
+create_button_row(second_half)
