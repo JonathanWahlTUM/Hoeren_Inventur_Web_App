@@ -36,11 +36,11 @@ CUSTOM_CSS = """
 
     /* Buttons Styling */
     .stButton > button {
-        font-size: 16px !important; /* Größere Schriftgröße */
-        padding: 10px 20px !important; /* Größeres Padding */
-        height: 50px !important; /* Größere Höhe */
-        min-width: 120px !important; /* Mindestbreite erhöhen */
-        max-width: 200px !important; /* Maximale Breite festlegen */
+        font-size: 14px !important; /* Kleinere Schriftgröße */
+        padding: 8px 16px !important; /* Verkleinertes Padding */
+        height: 40px !important; /* Verkleinerte Höhe */
+        min-width: 100px !important; /* Verkleinerte Mindestbreite */
+        max-width: 150px !important; /* Verkleinerte Maximalbreite */
         background-color: #007bff !important; /* Button-Farbe */
         color: white !important; /* Textfarbe */
         border: none !important; /* Kein Rahmen */
@@ -56,11 +56,11 @@ CUSTOM_CSS = """
     /* Responsive Anpassungen */
     @media (max-width: 768px) {
         .stButton > button {
-            font-size: 14px !important;
-            padding: 8px 16px !important;
-            height: 45px !important;
-            min-width: 100px !important;
-            max-width: 150px !important;
+            font-size: 12px !important; /* Noch kleinere Schriftgröße */
+            padding: 6px 12px !important; /* Noch kleineres Padding */
+            height: 35px !important; /* Noch kleinere Höhe */
+            min-width: 80px !important; /* Noch kleinere Mindestbreite */
+            max-width: 130px !important; /* Noch kleinere Maximalbreite */
         }
     }
 </style>
@@ -93,7 +93,7 @@ for row_buttons in chunk_list(button_definitions, cols_per_row):
                 current_time = time.time()
                 # Prüfe die 1-Sekunden-Sperre
                 if current_time - st.session_state["last_click_time"] < 1:
-                    st.warning("noch keine Sekunde vergangen")
+                    st.warning("Bitte warte 1 Sekunde zwischen den Klicks!")
                 else:
                     st.session_state["last_click_time"] = current_time
                     st.session_state["logs"].append(label)
