@@ -1,7 +1,6 @@
 import streamlit as st
 import time
 import os
-import requests
 
 # Seitenkonfiguration für optimales Layout auf Mobilgeräten
 st.set_page_config(
@@ -31,20 +30,12 @@ if "current_audio" not in st.session_state:
 # Minimaler CSS zur Anpassung des Layouts
 CUSTOM_CSS = """
 <style>
-    /* Hauptüberschrift verkleinern und zentrieren */
+    /* Überschrift verkleinern und zentrieren */
     h1 {
         font-size: 24px !important;
         text-align: center !important;
         margin-top: 10px;
         margin-bottom: 20px;
-    }
-
-    /* Audio-Player Überschriften verkleinern (h2 statt h1) */
-    h2 {
-        font-size: 20px !important;
-        text-align: center !important;
-        margin-top: 15px;
-        margin-bottom: 10px;
     }
 
     /* Button-Container mit Flexbox */
@@ -95,7 +86,7 @@ CUSTOM_CSS = """
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # Oberes Viertel: Bild + Titel
-image_path = "piktogramm.png"  # Korrigierter Pfad, da das Bild im Hauptverzeichnis liegt
+image_path = "audio_files/piktogramm.png"
 if os.path.exists(image_path):
     st.image(image_path, use_container_width=True)
 else:
@@ -123,29 +114,10 @@ audio_players = [
     }
 ]
 
-def check_url(url):
-    """Überprüft, ob die URL erreichbar ist."""
-    try:
-        response = requests.head(url, allow_redirects=True, timeout=5)
-        return response.status_code == 200
-    except:
-        return False
-
 for player in audio_players:
-    if check_url(player["url"]):
-        # Kleinere Überschrift für den Audio-Player
-        st.markdown(f"<h2>{player['title']}</h2>", unsafe_allow_html=True)
-        # Einbindung des Audio-Players mittels HTML5
-        audio_html = f"""
-        <audio controls>
-            <source src="{player['url']}" type="audio/mp3">
-            Ihr Browser unterstützt das Audio-Element nicht.
-        </audio>
-        """
-        st.markdown(audio_html, unsafe_allow_html=True)
-        st.markdown("<br>", unsafe_allow_html=True)
-    else:
-        st.error(f"Audiodatei nicht erreichbar: {player['title']}")
+    st.subheader(player["title"])
+    st.audio(player["url"], format='audio/mp3')
+    st.markdown("<br>", unsafe_allow_html=True)
 
 # Mittleres Viertel: Ausgabe-Textfeld (nur einmal)
 st.markdown("<hr>", unsafe_allow_html=True)
@@ -175,13 +147,7 @@ for row_buttons in chunk_list(button_definitions, cols_per_row):
                 else:
                     st.session_state["last_click_time"] = current_time
                     st.session_state["logs"].append(label)
-                    # Audio abspielen mittels HTML5 Audio-Tag
-                    audio_html_button = f"""
-                    <audio autoplay>
-                        <source src="{button_definitions[label]}" type="audio/mp3">
-                        Ihr Browser unterstützt das Audio-Element nicht.
-                    </audio>
-                    """
-                    st.markdown(audio_html_button, unsafe_allow_html=True)
+                    # Audio abspielen
+                    st.audio(button_definitions[label], format='audio/mp3')
 
 st.markdown('</div>', unsafe_allow_html=True)
