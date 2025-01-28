@@ -1,6 +1,7 @@
 import streamlit as st
 import time
 import os
+import requests
 
 # Seitenkonfiguration für optimales Layout auf Mobilgeräten
 st.set_page_config(
@@ -30,12 +31,20 @@ if "current_audio" not in st.session_state:
 # Minimaler CSS zur Anpassung des Layouts
 CUSTOM_CSS = """
 <style>
-    /* Überschrift verkleinern und zentrieren */
+    /* Hauptüberschrift verkleinern und zentrieren */
     h1 {
         font-size: 24px !important;
         text-align: center !important;
         margin-top: 10px;
         margin-bottom: 20px;
+    }
+
+    /* Audio-Player Überschriften verkleinern (h2 statt h1) */
+    h2 {
+        font-size: 20px !important;
+        text-align: center !important;
+        margin-top: 15px;
+        margin-bottom: 10px;
     }
 
     /* Button-Container mit Flexbox */
@@ -86,7 +95,7 @@ CUSTOM_CSS = """
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # Oberes Viertel: Bild + Titel
-image_path = "audio_files/piktogramm.png"
+image_path = "piktogramm.png"  # Korrigierter Pfad
 if os.path.exists(image_path):
     st.image(image_path, use_container_width=True)
 else:
@@ -114,10 +123,21 @@ audio_players = [
     }
 ]
 
+def check_url(url):
+    """Überprüft, ob die URL erreichbar ist."""
+    try:
+        response = requests.head(url, allow_redirects=True, timeout=5)
+        return response.status_code == 200
+    except:
+        return False
+
 for player in audio_players:
-    st.subheader(player["title"])
-    st.audio(player["url"], format='audio/mp3')
-    st.markdown("<br>", unsafe_allow_html=True)
+    if check_url(player["url"]):
+        st.markdown(f"<h2>{player['title']}</h2>", unsafe_allow_html=True)
+        st.audio(player["url"], format='audio/mp3')
+        st.markdown("<br>", unsafe_allow_html=True)
+    else:
+        st.error(f"Audiodatei nicht erreichbar: {player['title']}")
 
 # Mittleres Viertel: Ausgabe-Textfeld (nur einmal)
 st.markdown("<hr>", unsafe_allow_html=True)
