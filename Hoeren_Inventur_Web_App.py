@@ -23,11 +23,11 @@ if "last_click_time" not in st.session_state:
 if "logs" not in st.session_state:
     st.session_state["logs"] = []
 
-# Pfade zu deinen Audiodateien (im "audio"-Ordner)
+# Pfade zu deinen Audiodateien (direkt im Hauptverzeichnis)
 audio_files = {
-    "Audio 1": "audio/Aufnahme Heimweg.mp3",
-    "Audio 2": "audio/Aufnahme Türen.mp3",
-    "Audio 3": "audio/Noice Cancelling.mp3",
+    "Audio 1": "Aufnahme Heimweg.mp3",
+    "Audio 2": "Aufnahme Türen.mp3",
+    "Audio 3": "Noice Cancelling.mp3",
 }
 
 # Minimaler CSS zur Anpassung des Layouts
@@ -102,7 +102,7 @@ CUSTOM_CSS = """
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # Oberes Viertel: Bild + Titel
-st.image("piktogramm.png", use_container_width=True)
+st.image("piktogramm.png", use_container_width=True) # Die piktogramm.png muss auch im Hauptverzeichnis liegen.
 st.markdown("<h1>51 Minuten, 10.01.2024, 12.17 Uhr - München - Hören</h1>", unsafe_allow_html=True)
 
 # Audioplayer-Sektion
