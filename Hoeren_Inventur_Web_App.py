@@ -23,6 +23,13 @@ if "last_click_time" not in st.session_state:
 if "logs" not in st.session_state:
     st.session_state["logs"] = []
 
+# Pfade zu deinen Audiodateien (direkt im Hauptverzeichnis)
+audio_files = {
+    "Audio 1": "Aufnahme Heimweg.mp3",
+    "Audio 2": "Aufnahme Türen.mp3",
+    "Audio 3": "Noice Cancelling.mp3",
+}
+
 # Minimaler CSS zur Anpassung des Layouts
 CUSTOM_CSS = """
 <style>
@@ -75,6 +82,19 @@ CUSTOM_CSS = """
             max-width: 130px !important; /* Noch kleinere Maximalbreite */
         }
     }
+
+    /* Audio Player Styling */
+    .audio-player {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    .audio-player audio {
+        width: 90%; /* Breite des Audio-Players */
+        height: 40px; /* Höhe anpassen */
+    }
 </style>
 """
 
@@ -82,14 +102,20 @@ CUSTOM_CSS = """
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # Oberes Viertel: Bild + Titel
-st.image("piktogramm.png", use_container_width=True)
+st.image("piktogramm.png", use_container_width=True) # Die piktogramm.png muss auch im Hauptverzeichnis liegen.
 st.markdown("<h1>51 Minuten, 10.01.2024, 12.17 Uhr - München - Hören</h1>", unsafe_allow_html=True)
+
+# Audioplayer-Sektion
+st.markdown('<div class="audio-player">', unsafe_allow_html=True)
+for audio_name, audio_path in audio_files.items():
+    st.audio(audio_path, format="audio/mpeg")
+st.markdown('</div>', unsafe_allow_html=True)
 
 # Mittleres Viertel: Ausgabe-Textfeld (nur einmal)
 st.text_area("Ausgabe", value=" ".join(st.session_state["logs"]), height=100)
 
 # Buttons: Arrange in a grid-like pattern (z.B. 4 Spalten pro Reihe)
-cols_per_row = 4  # Anzahl der Spalten pro Zeile
+cols_per_row = 4
 
 # Funktion zum Aufteilen der Liste in Chunks
 def chunk_list(lst, n):
