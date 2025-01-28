@@ -13,7 +13,7 @@ button_definitions = {
     "Warnsignal": "https://tumde-my.sharepoint.com/:u:/g/personal/jonathan_wahl_tum_de/EZiuE-3m1DJEq2RSN3ArlF8BwTZXikdI28Vbxuwf7UI0Nw/download?version=1.0",
     "Autogeräusche": "https://tumde-my.sharepoint.com/:u:/g/personal/jonathan_wahl_tum_de/AnotherLink/download?version=1.0",
     "Zuggeräusche": "https://tumde-my.sharepoint.com/:u:/g/personal/jonathan_wahl_tum_de/ThirdLink/download?version=1.0",
-    # Füge hier weitere Buttons und ihre direkten Audio-URLs hinzu
+    # Füge hier die restlichen Buttons und ihre direkten Audio-URLs hinzu
 }
 
 # Session State initialisieren
