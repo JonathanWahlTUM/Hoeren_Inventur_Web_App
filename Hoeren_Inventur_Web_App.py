@@ -95,7 +95,7 @@ CUSTOM_CSS = """
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # Oberes Viertel: Bild + Titel
-image_path = "piktogramm.png"  # Korrigierter Pfad
+image_path = "piktogramm.png"  # Korrigierter Pfad, da das Bild im Hauptverzeichnis liegt
 if os.path.exists(image_path):
     st.image(image_path, use_container_width=True)
 else:
@@ -133,8 +133,16 @@ def check_url(url):
 
 for player in audio_players:
     if check_url(player["url"]):
+        # Kleinere Überschrift für den Audio-Player
         st.markdown(f"<h2>{player['title']}</h2>", unsafe_allow_html=True)
-        st.audio(player["url"], format='audio/mp3')
+        # Einbindung des Audio-Players mittels HTML5
+        audio_html = f"""
+        <audio controls>
+            <source src="{player['url']}" type="audio/mp3">
+            Ihr Browser unterstützt das Audio-Element nicht.
+        </audio>
+        """
+        st.markdown(audio_html, unsafe_allow_html=True)
         st.markdown("<br>", unsafe_allow_html=True)
     else:
         st.error(f"Audiodatei nicht erreichbar: {player['title']}")
@@ -167,7 +175,13 @@ for row_buttons in chunk_list(button_definitions, cols_per_row):
                 else:
                     st.session_state["last_click_time"] = current_time
                     st.session_state["logs"].append(label)
-                    # Audio abspielen
-                    st.audio(button_definitions[label], format='audio/mp3')
+                    # Audio abspielen mittels HTML5 Audio-Tag
+                    audio_html_button = f"""
+                    <audio autoplay>
+                        <source src="{button_definitions[label]}" type="audio/mp3">
+                        Ihr Browser unterstützt das Audio-Element nicht.
+                    </audio>
+                    """
+                    st.markdown(audio_html_button, unsafe_allow_html=True)
 
 st.markdown('</div>', unsafe_allow_html=True)
