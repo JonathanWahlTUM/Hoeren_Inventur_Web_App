@@ -1,5 +1,6 @@
 import streamlit as st
 import time
+import urllib.parse
 
 # Seitenkonfiguration für optimales Layout auf Mobilgeräten
 st.set_page_config(
@@ -85,10 +86,31 @@ st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 st.image("piktogramm.png", use_container_width=True)
 st.markdown("<h1>51 Minuten, 10.01.2024, 12.17 Uhr - München - Hören</h1>", unsafe_allow_html=True)
 
+# --- Hier werden die Audio-Player integriert (oberhalb des Ausgabe-Textfelds) ---
+
+# Liste der GitHub-RAW-Links für die Audio-Dateien
+audio_links = [
+    "https://github.com/JonathanWahlTUM/audio/raw/refs/heads/main/Aufnahme%20Heimweg.mp3",
+    "https://github.com/JonathanWahlTUM/audio/raw/refs/heads/main/Aufnahme%20Türen.mp3",
+    "https://github.com/JonathanWahlTUM/audio/raw/refs/heads/main/Noice%20Cancelling.mp3"
+]
+
+# Für jeden Link: Dateinamen extrahieren, Überschrift setzen und Audio-Player einbetten
+for link in audio_links:
+    # Extrahiere den Dateinamen aus dem Link (z. B. "Aufnahme%20Heimweg.mp3")
+    file_name = link.split("/")[-1]
+    # URL-dekodieren, um z. B. %20 durch Leerzeichen zu ersetzen
+    file_name_decoded = urllib.parse.unquote(file_name)
+    # Entferne die Dateiendung, um nur den Titel zu erhalten
+    title = file_name_decoded.rsplit(".", 1)[0]
+    
+    st.subheader(title)
+    st.audio(link, format="audio/mpeg")
+
 # Mittleres Viertel: Ausgabe-Textfeld (nur einmal)
 st.text_area("Ausgabe", value=" ".join(st.session_state["logs"]), height=100)
 
-# Buttons: Arrange in a grid-like pattern (z.B. 4 Spalten pro Reihe)
+# --- Buttons: Arrange in a grid-like pattern (z. B. 4 Spalten pro Reihe) ---
 cols_per_row = 4  # Anzahl der Spalten pro Zeile
 
 # Funktion zum Aufteilen der Liste in Chunks
